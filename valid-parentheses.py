@@ -24,4 +24,4 @@ class Solution:
                 leftChar = stack.pop();
                 if currChar is not rightPair[leftChar]:
                     return False;
-        return True;
+        return len(stack) == 0;
