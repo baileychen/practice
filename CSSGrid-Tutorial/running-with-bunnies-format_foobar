@@ -1,0 +1,161 @@
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Arrays;
+
+// Level 4 - Challenge #2: running-with-bunnies
+public class Solution {
+    public static int[] solution(int[][] times, int times_limit) {
+        //todo: How to get 0->..(1|2)...->end???
+    /*
+        run floyd warshall algorithm to find shortest distance between all pairs
+        int[][] minDist
+        if there is a negative cycle: return ids of all bunnies in order
+        if there is no negative cycle...
+        
+        get all 5! permutations of bunny carrying with the start point and exist at end
+        get longest list
+        */
+        int[][] dist = floydWarshall(times);
+        if (hasNegativeCycle(dist)) {
+            int[] answer = new int[times.length - 2];
+            for (int i = 0; i < times.length - 2; i++) {
+                answer[i] = i;
+            }
+            return answer;
+        }
+        
+        List<Integer> bunnies = new ArrayList<>();
+        for (int i = 1; i < times.length - 1; i++) {
+            bunnies.add(i);
+        }
+        
+        List<List<Integer>> permutations = allPermutations(bunnies);
+        List<Integer> bestAnswer = new ArrayList<>();
+        
+        for (List<Integer> perm : permutations) {
+            List<Integer> bunniesGathered = gatherBunnies(dist, perm, times_limit);
+            Collections.sort(bunniesGathered);
+            if (ListComparator.compare(bunniesGathered, bestAnswer) == -1) {
+                bestAnswer = bunniesGathered;
+            }
+        }
+        
+        int[] bestAnswerArray = new int[bestAnswer.size()];
+        for (int i = 0; i < bestAnswer.size(); i++) {
+            bestAnswerArray[i] = bestAnswer.get(i) - 1;
+        }
+        return bestAnswerArray;
+    }
+
+    public static class ListComparator {
+        // Method
+        // Sorting in ascending order of bunny id
+        public static int compare(List<Integer> a, List<Integer> b)
+        {
+        
+            if (a.size() != b.size()) {
+                return -1 * Integer.compare(a.size(), b.size());
+            }
+            for (int i = 0; i < a.size(); i++) {
+                if (a.get(i) < b.get(i)) {
+                    return -1;
+                }
+                if (a.get(i) > b.get(i)) {
+                    return 1;
+                }
+            }
+            return 0;
+        }
+    }
+        
+
+    private static List<Integer> gatherBunnies(int[][] dist, List<Integer> order, int times_limit) {
+        // Q: how do you handle partial completions? i.e. 1->2->3 you can only get [1,2]? maybe: keep track of whether exit/bulkhead is part of path in dist[i][j]?
+        int maxIndex = 0;
+        /*
+        traverse from start->1->2...->end and see if resulting time left >= 0.
+            add to list of valid paths
+        0->1->2->...->end
+        */
+        order.add(0, 0);
+        order.add(dist.length - 1);
+        for (int i = 0; i < order.size() - 1; i++) {
+            int timeLeft = times_limit - dist[order.get(i)][order.get(i+1)];
+            if (timeLeft - dist[order.get(i+1)][dist.length-1] >= 0) {
+                maxIndex = i + 1;
+            }
+            times_limit = timeLeft;
+        }
+        
+        // return 1->2->3
+        List<Integer> bunnies = new ArrayList<>();
+        for (int i = 1; i <= Math.min(maxIndex, dist.length - 2); i++) {
+            bunnies.add(order.get(i));
+        }
+        return bunnies;
+        
+    }
+
+    private static List<List<Integer>> allPermutations(List<Integer> remaining) {
+        /*
+        1,2,3
+        1,3,2
+        2,1,3
+        2,3,1
+        3,1,2
+        3,2,1
+        */
+        List<List<Integer>> perms = new ArrayList<>();
+        if (remaining.isEmpty()) {
+            perms.add(new ArrayList<>());
+            return perms;
+        }
+        for (int i = 0; i < remaining.size(); i++) {
+            List<Integer> remainingCopy = new ArrayList<>(remaining);
+            int first = remainingCopy.get(i);
+            remainingCopy.remove(i);
+            List<List<Integer>> remainingPerms = allPermutations(remainingCopy);
+            for (List<Integer> remainingPerm: remainingPerms) {
+                List<Integer> newPerm = new ArrayList<>();
+                newPerm.add(first);
+                newPerm.addAll(remainingPerm);
+                perms.add(newPerm);
+            }
+        }
+        return perms;
+    }
+
+    private static boolean hasNegativeCycle(int[][] dist) {
+        for (int i = 0; i < dist.length; i++) {
+            if (dist[i][i] < 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+    private static int[][] floydWarshall(int[][] times) {
+        int[][] dist = new int[times.length][times.length];
+        for (int i = 0; i < times.length; i++) {
+            Arrays.fill(dist[i], Integer.MAX_VALUE);
+        }
+        for (int i = 0; i < times.length; i++) {
+            for (int j = 0; j < times.length; j++) {
+                dist[i][j] = times[i][j];
+            }
+        }
+        
+        // run floyd warshall
+        for (int k = 0; k < times.length; k++) {
+            for (int i = 0; i < times.length; i++) {
+                for (int j = 0; j < times.length; j++) {
+                    if (dist[i][k] + dist[k][j] < dist[i][j]) {
+                        dist[i][j] = dist[i][k] + dist[k][j];
+                    }
+                }
+            }
+        }
+        return dist;
+    }
+}

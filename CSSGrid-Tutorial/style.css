@@ -1,0 +1,317 @@
+/* https://www.freecodecamp.org/news/learn-css-grid-by-building-5-layouts/ */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap");
+
+/* SET UP */
+
+* {
+  box-sizing: border-box;
+}
+
+ul {
+  padding-left: 1.5rem;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  color: #333;
+  background-color: snow;
+  margin: 0 auto;
+  max-width: 1000px;
+}
+
+.item {
+  padding: 8px;
+  background-color: white;
+  border: 4px solid tomato;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+.height-50 {
+  height: 50vh;
+}
+
+/* Task 1 */
+
+.task-1.container {
+  display: grid;
+  height: 100vh;
+  grid-template-rows: auto 1fr auto;
+}
+
+/* Task 2 */
+
+.task-2.container {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: 1fr;
+  column-gap: 1rem;
+  height: 100vh;
+  align-items: center;
+}
+
+.task-2 .item-1 {
+  grid-column: 2 / span 4;
+}
+
+.task-2 .item-2 {
+  grid-column: 6 / span 6;
+}
+
+/* Task 3.1 */
+
+.task-3-1.container {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(2, auto) 1fr repeat(3, auto);
+  height: 100vh;
+  row-gap: 1.5rem;
+  column-gap: 1.5rem;
+}
+
+@media (min-width: 720px) {
+  .task-3-1.container {
+    grid-template-columns: 20% 1fr;
+    grid-template-rows: repeat(2, auto) 1fr auto;
+  }
+
+  .task-3-1 .header {
+    grid-column: 1 / -1;
+    /* grid-row-start: 1; */
+    order: 1;
+  }
+
+  .task-3-1 .navigation {
+    grid-column: 1 / -1;
+    /* grid-row-start: 2; */
+    order: 2;
+  }
+
+  .task-3-1 .main {
+    /* order: 1; */
+    order: 4;
+  }
+
+  .task-3-1 .sidebar {
+    order: 3;
+  }
+
+  .task-3-1 .ads {
+    order: 5;
+  }
+
+  .task-3-1 .footer {
+    order: 6;
+  }
+}
+
+@media (min-width: 1020px) {
+  .task-3-1.container {
+    grid-template-columns: 20% 1fr 10%;
+    grid-template-rows: auto auto 1fr auto;
+  }
+  .task-3-1 .header {
+    order: 1;
+  }
+
+  .task-3-1 .navigation {
+    order: 3;
+    grid-column: 2 / span 1;
+
+  }
+
+  .task-3-1 .main {
+    order: 4;
+    grid-column: 2;
+  }
+
+  .task-3-1 .sidebar {
+    order: 2;
+    grid-row: 2 / span 2;
+    /* grid-row-end: 4; */
+  }
+
+  .task-3-1 .ads {
+    order: 5;
+    grid-row: 2 / span 2;
+    grid-column: 3;
+  }
+
+  .task-3-1 .footer {
+    order: 6;
+    grid-column: 1 / -1;
+  }
+}
+
+/* Task 3.2 */
+
+.task-3-2.container {
+  height: 100vh;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto auto auto;
+  grid-template-areas: 
+    "header"
+    "navigation"
+    "main"
+    "sidebar"
+    "ads"
+    "footer";
+    row-gap: 2rem;
+}
+
+.task-3-2 .header {
+  grid-area: header;
+}
+
+.task-3-2 .navigation {
+  grid-area: navigation;
+}
+
+.task-3-2 .ads {
+  grid-area: ads;
+}
+
+.task-3-2 .sidebar {
+  grid-area: sidebar;
+}
+
+.task-3-2 .main {
+  grid-area: main;
+}
+
+.task-3-2 .footer {
+  grid-area: footer;
+}
+
+@media ( min-width: 720px) {
+  .task-3-2.container {
+    grid-template-columns: 20% 1fr;
+    grid-template-rows: auto auto 1fr auto;
+    grid-template-areas: 
+      "header header"
+      "navigation navigation"
+      "sidebar main"
+      "ads footer";
+      row-gap: 2rem;
+      column-gap: 2rem;
+      /* width: 100vw; */
+  }
+}
+
+@media (min-width: 1020px) {
+  .task-3-2.container {
+    grid-template-columns: 20% 1fr 15%;
+    grid-template-areas:
+      "header header header"
+      "sidebar navigation ads"
+      "sidebar main ads"
+      "footer footer footer";
+    row-gap: 2rem;
+    column-gap: 2rem;
+  }
+}
+
+/* Task 4 */
+
+.task-4.container {
+  display: grid;
+  column-gap: 2rem;
+  row-gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.task-4 .item-5 {
+}
+
+/* Task 5 */
+
+.task-5.container {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: repeat(12, 1fr);
+  column-gap: 4px;
+  row-gap: 4px;
+  height: 100vh;
+}
+
+.task-5 .item-1 {
+  grid-column: 10 / span 3;
+  grid-row: 10 / span 3;
+}
+
+.task-5 .item-2 {
+  grid-column: 4 / span 3;
+  grid-row: 4 / span 3;
+}
+
+.task-5 .item-3 {
+  grid-column: 7 / span 3;
+  grid-row: 7 / span 3;
+}
+
+.task-5 .item-4 {
+  grid-column: 1 / span 3;
+  grid-row: 1 / span 3;
+}
+
+/* Task Youtube Homepage */
+
+.task-youtube {
+    display: grid;
+    height: 100vh;
+}
+
+@media screen and (min-width: 0) {
+    .task-youtube {
+        grid-template-columns: 1fr;
+        grid-template-rows: 10% 1fr;
+        grid-template-areas:
+            "header"
+            "main"
+    ;
+    }
+    .task-youtube section {
+        display: none;
+    }
+}
+
+@media screen and (min-width: 800px) {
+    .task-youtube {
+        grid-template-columns: 20% 1fr;
+        grid-template-rows: 10% 1fr;
+        grid-template-areas:
+            "header header"
+            "sidebar main"
+    ;
+    }
+    .task-youtube section {
+        display: unset;
+    }
+}
+
+.task-youtube header {
+    grid-area: header;
+}
+
+.task-youtube header nav {
+    display: flex;
+    justify-content: space-between;
+}
+
+.task-youtube section {
+    grid-area: sidebar;
+}
+
+.task-youtube main {
+    grid-area: main;
+}
+
+.task-youtube .videos {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+}
+
+.task-youtube iframe {
+    width: 100%;
+}
